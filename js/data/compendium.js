@@ -124,6 +124,7 @@ const COMPENDIUM = {
         <li>Phases: trough → expansion → peak → contraction. Inventory/sales ratio rises near peaks and falls in early expansion.</li>
         <li><strong>Leading indicators</strong>: stock prices, building permits, yield spread. <strong>Coincident</strong>: payrolls, industrial production. <strong>Lagging</strong>: CPI for services, average duration of unemployment, prime rate.</li>
         <li>Unemployment types: frictional (searching), structural (skills mismatch), cyclical (downturn-related).</li>
+        <li>Inflation measures: <strong>CPI</strong> tracks a fixed consumption basket (subject to substitution and quality bias); the <strong>GDP deflator</strong> = (nominal GDP / real GDP) × 100 is the broadest gauge — rearrange to get real GDP = nominal GDP / deflator × 100.</li>
       </ul>
     </div>
     <div class="comp-section">
