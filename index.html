@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CFA Prep — CFA Level I Study Platform</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand" id="brand-home" title="Home">
+        <span class="brand-mark">CFA</span><span class="brand-text">Prep</span>
+      </div>
+      <nav class="main-nav" id="main-nav">
+        <button class="nav-btn" data-view="home">Home</button>
+        <button class="nav-btn" data-view="compendium">Compendium</button>
+        <button class="nav-btn" data-view="formulas">Formula Sheets</button>
+        <button class="nav-btn" data-view="exercises">Practice Problems</button>
+        <button class="nav-btn" data-view="quiz">Mock Tests</button>
+        <button class="nav-btn" data-view="progress">Progress</button>
+      </nav>
+      <button id="calc-toggle" class="calc-toggle" title="Toggle the financial calculator on/off">
+        <span class="calc-icon">🖩</span> Calculator <span id="calc-state" class="calc-state">OFF</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="app" class="app-main"></main>
+
+  <!-- Floating financial calculator -->
+  <div id="calculator" class="calculator hidden" aria-hidden="true">
+    <div class="calc-header" id="calc-drag-handle">
+      <span>Financial Calculator</span>
+      <div class="calc-header-actions">
+        <button id="calc-close" class="calc-close" title="Close calculator">✕</button>
+      </div>
+    </div>
+    <div class="calc-tabs">
+      <button class="calc-tab active" data-mode="std">Standard</button>
+      <button class="calc-tab" data-mode="tvm">TVM</button>
+      <button class="calc-tab" data-mode="cf">NPV / IRR</button>
+    </div>
+    <div class="calc-body">
+      <!-- Standard mode -->
+      <div class="calc-pane" id="calc-pane-std">
+        <input type="text" id="calc-display" class="calc-display" value="0" readonly>
+        <div class="calc-grid">
+          <button class="ck fn" data-k="C">C</button>
+          <button class="ck fn" data-k="CE">CE</button>
+          <button class="ck fn" data-k="back">⌫</button>
+          <button class="ck op" data-k="/">÷</button>
+          <button class="ck" data-k="7">7</button>
+          <button class="ck" data-k="8">8</button>
+          <button class="ck" data-k="9">9</button>
+          <button class="ck op" data-k="*">×</button>
+          <button class="ck" data-k="4">4</button>
+          <button class="ck" data-k="5">5</button>
+          <button class="ck" data-k="6">6</button>
+          <button class="ck op" data-k="-">−</button>
+          <button class="ck" data-k="1">1</button>
+          <button class="ck" data-k="2">2</button>
+          <button class="ck" data-k="3">3</button>
+          <button class="ck op" data-k="+">+</button>
+          <button class="ck" data-k="0">0</button>
+          <button class="ck" data-k=".">.</button>
+          <button class="ck fn" data-k="+/-">±</button>
+          <button class="ck eq" data-k="=">=</button>
+          <button class="ck fn" data-k="sqrt">√x</button>
+          <button class="ck fn" data-k="x2">x²</button>
+          <button class="ck fn" data-k="pow">yˣ</button>
+          <button class="ck fn" data-k="inv">1/x</button>
+          <button class="ck fn" data-k="ln">ln</button>
+          <button class="ck fn" data-k="ex">eˣ</button>
+          <button class="ck fn" data-k="pct">%</button>
+          <button class="ck fn" data-k="fact">n!</button>
+        </div>
+      </div>
+
+      <!-- TVM (time value of money) mode -->
+      <div class="calc-pane hidden" id="calc-pane-tvm">
+        <p class="calc-hint">Enter any 4 values, then click the button next to the 5th to solve for it. BA II Plus sign convention (outflows negative).</p>
+        <div class="tvm-row"><button class="tvm-solve" data-solve="n">N</button><input type="number" step="any" id="tvm-n" placeholder="number of periods"></div>
+        <div class="tvm-row"><button class="tvm-solve" data-solve="iy">I/Y</button><input type="number" step="any" id="tvm-iy" placeholder="% per period"></div>
+        <div class="tvm-row"><button class="tvm-solve" data-solve="pv">PV</button><input type="number" step="any" id="tvm-pv" placeholder="present value"></div>
+        <div class="tvm-row"><button class="tvm-solve" data-solve="pmt">PMT</button><input type="number" step="any" id="tvm-pmt" placeholder="periodic payment"></div>
+        <div class="tvm-row"><button class="tvm-solve" data-solve="fv">FV</button><input type="number" step="any" id="tvm-fv" placeholder="future value"></div>
+        <div class="tvm-row tvm-options">
+          <label><input type="checkbox" id="tvm-begin"> Payments at beginning of period (BGN)</label>
+        </div>
+        <div class="tvm-actions">
+          <button id="tvm-clear" class="btn-secondary">Clear (CLR TVM)</button>
+        </div>
+        <div id="tvm-result" class="calc-result"></div>
+      </div>
+
+      <!-- Cash flow mode -->
+      <div class="calc-pane hidden" id="calc-pane-cf">
+        <p class="calc-hint">CF0 is the initial outlay (usually negative). Add subsequent cash flows CF1, CF2…</p>
+        <div class="cf-row"><label>CF0</label><input type="number" step="any" id="cf0" placeholder="e.g. -1000"></div>
+        <div id="cf-list"></div>
+        <div class="cf-actions">
+          <button id="cf-add" class="btn-secondary">+ Add cash flow</button>
+          <button id="cf-clear" class="btn-secondary">Clear</button>
+        </div>
+        <div class="cf-row"><label>Rate % (I)</label><input type="number" step="any" id="cf-rate" placeholder="e.g. 10"></div>
+        <div class="cf-actions">
+          <button id="cf-npv" class="btn-primary">Compute NPV</button>
+          <button id="cf-irr" class="btn-primary">Compute IRR</button>
+        </div>
+        <div id="cf-result" class="calc-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/data/topics.js"></script>
+  <script src="js/data/compendium.js"></script>
+  <script src="js/data/formulas.js"></script>
+  <script src="js/data/exercises.js"></script>
+  <script src="js/data/questions.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

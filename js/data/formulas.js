@@ -1,0 +1,107 @@
+/* Formula sheets: expression + quick explanation, grouped by topic. */
+const FORMULAS = [
+  // ---------- Quantitative Methods ----------
+  { topic: 'quant', name: 'Future value', expr: 'FV = PV × (1 + r)<sup>N</sup>', note: 'Compound a present amount forward N periods at rate r per period.' },
+  { topic: 'quant', name: 'Present value', expr: 'PV = FV / (1 + r)<sup>N</sup>', note: 'Discount a future amount back N periods. Higher r or N → lower PV.' },
+  { topic: 'quant', name: 'Effective annual rate (EAR)', expr: 'EAR = (1 + r<sub>stated</sub>/m)<sup>m</sup> − 1', note: 'm = compounding periods per year. Continuous: EAR = e^r − 1.' },
+  { topic: 'quant', name: 'PV of ordinary annuity', expr: 'PV = PMT × [1 − (1+r)<sup>−N</sup>] / r', note: 'Level payments at end of each period. Annuity due: multiply by (1+r).' },
+  { topic: 'quant', name: 'FV of ordinary annuity', expr: 'FV = PMT × [(1+r)<sup>N</sup> − 1] / r', note: 'Value of level payments accumulated to the end of period N.' },
+  { topic: 'quant', name: 'Perpetuity', expr: 'PV = PMT / r', note: 'Infinite level payments; first payment one period from today.' },
+  { topic: 'quant', name: 'Holding period return', expr: 'HPR = (P₁ − P₀ + D) / P₀', note: 'Total return over the period including income D.' },
+  { topic: 'quant', name: 'Geometric mean return', expr: 'R<sub>G</sub> = [(1+R₁)(1+R₂)…(1+R<sub>N</sub>)]<sup>1/N</sup> − 1', note: 'Compound growth rate per period; always ≤ arithmetic mean.' },
+  { topic: 'quant', name: 'Harmonic mean', expr: 'H = N / Σ(1/x<sub>i</sub>)', note: 'Average price paid with equal money invested each period (cost averaging).' },
+  { topic: 'quant', name: 'Sample variance', expr: 's² = Σ(x<sub>i</sub> − x̄)² / (n − 1)', note: 'Divide by n−1 (degrees of freedom) for a sample, n for a population.' },
+  { topic: 'quant', name: 'Coefficient of variation', expr: 'CV = s / x̄', note: 'Risk per unit of return — lower is better for comparing investments.' },
+  { topic: 'quant', name: 'Roy’s safety-first ratio', expr: 'SF = (E(R<sub>p</sub>) − R<sub>L</sub>) / σ<sub>p</sub>', note: 'RL = minimum acceptable (threshold) return. Choose the highest SF ratio.' },
+  { topic: 'quant', name: 'z-score (standardization)', expr: 'z = (x − μ) / σ', note: 'Number of standard deviations x lies from the mean.' },
+  { topic: 'quant', name: 'Standard error of the mean', expr: 'SE = σ / √n', note: 'Volatility of the sample mean; shrinks as sample size grows.' },
+  { topic: 'quant', name: 'Confidence interval (mean)', expr: 'x̄ ± z<sub>α/2</sub> × σ/√n', note: '90% → 1.65, 95% → 1.96, 99% → 2.58 (z, known variance; use t otherwise).' },
+  { topic: 'quant', name: 't-test of a mean', expr: 't = (x̄ − μ₀) / (s/√n)', note: 'df = n − 1. Reject H₀ if |t| exceeds the critical value.' },
+  { topic: 'quant', name: 'Bayes’ formula', expr: 'P(A|B) = P(B|A) × P(A) / P(B)', note: 'Update the prior P(A) after observing evidence B.' },
+  { topic: 'quant', name: 'Combinations', expr: 'nCr = n! / [(n−r)! r!]', note: 'Number of ways to choose r items when order does not matter.' },
+  { topic: 'quant', name: 'Expected value & variance', expr: 'E(X) = Σp<sub>i</sub>x<sub>i</sub>;&nbsp;&nbsp; σ² = Σp<sub>i</sub>[x<sub>i</sub> − E(X)]²', note: 'Probability-weighted average and dispersion of outcomes.' },
+  { topic: 'quant', name: 'Correlation', expr: 'ρ = Cov(X,Y) / (σ<sub>X</sub>σ<sub>Y</sub>)', note: 'Bounded in [−1, +1]; measures strength of linear association only.' },
+
+  // ---------- Economics ----------
+  { topic: 'econ', name: 'Price elasticity of demand', expr: 'E<sub>p</sub> = %ΔQ<sub>d</sub> / %ΔP', note: '|E| > 1 elastic: price cut raises total revenue; |E| < 1 inelastic.' },
+  { topic: 'econ', name: 'Cross-price elasticity', expr: 'E<sub>xy</sub> = %ΔQ<sub>x</sub> / %ΔP<sub>y</sub>', note: 'Positive → substitutes, negative → complements.' },
+  { topic: 'econ', name: 'Fiscal multiplier', expr: 'Multiplier = 1 / [1 − MPC(1 − t)]', note: 'Impact of government spending on output; bigger with higher MPC, lower taxes.' },
+  { topic: 'econ', name: 'Quantity theory of money', expr: 'M × V = P × Y', note: 'With stable V and Y, money growth translates into inflation.' },
+  { topic: 'econ', name: 'Fisher effect', expr: 'i<sub>nominal</sub> ≈ r<sub>real</sub> + E(inflation)', note: 'Nominal rates embed expected inflation.' },
+  { topic: 'econ', name: 'Covered interest rate parity', expr: 'F = S × (1 + i<sub>price</sub>) / (1 + i<sub>base</sub>)', note: 'F, S quoted price/base. Higher-rate currency trades at a forward discount.' },
+  { topic: 'econ', name: 'Forward premium (%)', expr: '(F − S) / S', note: 'Positive → base currency at forward premium vs the price currency.' },
+  { topic: 'econ', name: 'GDP deflator', expr: 'Deflator = (Nominal GDP / Real GDP) × 100', note: 'Broadest inflation gauge; converts nominal GDP into real.' },
+  { topic: 'econ', name: 'Growth accounting', expr: 'ΔY ≈ ΔTFP + α·ΔK + (1−α)·ΔL', note: 'Output growth = technology + weighted capital and labor growth.' },
+
+  // ---------- FSA ----------
+  { topic: 'fsa', name: 'Basic EPS', expr: 'EPS = (NI − preferred div) / weighted avg shares', note: 'Preferred dividends are removed because EPS belongs to common only.' },
+  { topic: 'fsa', name: 'Diluted EPS (convertible bond)', expr: '(NI − pref div + interest(1−t)) / (shares + new shares)', note: 'Add back after-tax interest saved if bonds convert. Use only if dilutive.' },
+  { topic: 'fsa', name: 'Current & quick ratio', expr: 'Current = CA/CL;&nbsp; Quick = (Cash + ST inv + Recv)/CL', note: 'Quick ratio strips inventory — stricter liquidity test.' },
+  { topic: 'fsa', name: 'Inventory turnover & days', expr: 'Turnover = COGS / avg inventory;&nbsp; DOH = 365 / turnover', note: 'High turnover = efficient (or too little stock).' },
+  { topic: 'fsa', name: 'Receivables turnover & DSO', expr: 'Turnover = Revenue / avg receivables;&nbsp; DSO = 365 / turnover', note: 'DSO = average collection period in days.' },
+  { topic: 'fsa', name: 'Cash conversion cycle', expr: 'CCC = DOH + DSO − Days payables', note: 'Days of cash tied up in operations; shorter is better.' },
+  { topic: 'fsa', name: 'DuPont (3-way)', expr: 'ROE = Net margin × Asset turnover × Leverage', note: 'Decomposes ROE: profitability × efficiency × financing.' },
+  { topic: 'fsa', name: 'DuPont (5-way)', expr: 'ROE = Tax burden × Interest burden × EBIT margin × Turnover × Leverage', note: 'Tax burden = NI/EBT; interest burden = EBT/EBIT.' },
+  { topic: 'fsa', name: 'Interest coverage', expr: 'EBIT / interest expense', note: 'How many times operating profit covers interest; solvency signal.' },
+  { topic: 'fsa', name: 'FIFO inventory from LIFO', expr: 'INV<sub>FIFO</sub> = INV<sub>LIFO</sub> + LIFO reserve', note: 'COGS_FIFO = COGS_LIFO − Δ LIFO reserve.' },
+  { topic: 'fsa', name: 'Straight-line depreciation', expr: '(Cost − salvage) / useful life', note: 'DDB: 2/life × beginning carrying value (ignore salvage until floor).' },
+  { topic: 'fsa', name: 'FCFF from CFO', expr: 'FCFF = CFO + Int(1 − t) − FCInv', note: 'Cash available to all providers of capital.' },
+  { topic: 'fsa', name: 'FCFE', expr: 'FCFE = CFO − FCInv + net borrowing', note: 'Cash available to equity after reinvestment and debt flows.' },
+  { topic: 'fsa', name: 'Sustainable growth rate', expr: 'g = b × ROE', note: 'b = retention ratio = 1 − dividend payout ratio.' },
+
+  // ---------- Corporate Issuers ----------
+  { topic: 'corp', name: 'NPV', expr: 'NPV = Σ CF<sub>t</sub>/(1+r)<sup>t</sup> − initial outlay', note: 'Accept if NPV > 0; it is the expected addition to shareholder wealth.' },
+  { topic: 'corp', name: 'IRR definition', expr: 'Σ CF<sub>t</sub>/(1+IRR)<sup>t</sup> = 0', note: 'Discount rate that zeroes the NPV. NPV rules when they conflict.' },
+  { topic: 'corp', name: 'WACC', expr: 'WACC = w<sub>d</sub>r<sub>d</sub>(1−t) + w<sub>p</sub>r<sub>p</sub> + w<sub>e</sub>r<sub>e</sub>', note: 'Use market-value target weights; only debt gets a tax shield.' },
+  { topic: 'corp', name: 'CAPM cost of equity', expr: 'r<sub>e</sub> = R<sub>f</sub> + β(R<sub>m</sub> − R<sub>f</sub>)', note: 'Alternative: bond yield + risk premium (3–5%).' },
+  { topic: 'corp', name: 'Unlever / relever beta', expr: 'β<sub>asset</sub> = β<sub>equity</sub> / [1 + (1−t)(D/E)]', note: 'Pure-play method: unlever the comparable, relever at target D/E.' },
+  { topic: 'corp', name: 'Degree of operating leverage', expr: 'DOL = Q(P−V) / [Q(P−V) − F]', note: '%Δ operating income per %Δ sales; grows with fixed costs.' },
+  { topic: 'corp', name: 'Degree of financial leverage', expr: 'DFL = EBIT / (EBIT − interest)', note: '%Δ EPS per %Δ EBIT. DTL = DOL × DFL.' },
+  { topic: 'corp', name: 'Breakeven quantity', expr: 'Q<sub>BE</sub> = (F<sub>op</sub> + F<sub>fin</sub>) / (P − V)', note: 'Operating breakeven uses operating fixed costs only.' },
+  { topic: 'corp', name: 'Cost of trade credit', expr: '(1 + disc/(1−disc))<sup>365/days</sup> − 1', note: 'Annualized cost of skipping the early-payment discount — usually huge.' },
+
+  // ---------- Equity ----------
+  { topic: 'equity', name: 'Margin call price', expr: 'P<sub>call</sub> = P₀ × (1 − IM) / (1 − MM)', note: 'IM = initial margin, MM = maintenance margin (long position).' },
+  { topic: 'equity', name: 'Leverage ratio (margin)', expr: 'Leverage = 1 / initial margin', note: '50% margin → 2× leverage: returns and losses are doubled.' },
+  { topic: 'equity', name: 'Gordon growth model', expr: 'V₀ = D₁ / (r − g) = D₀(1+g)/(r − g)', note: 'Requires r > g and stable growth. Use D₁, the NEXT dividend.' },
+  { topic: 'equity', name: 'Multistage DDM (terminal value)', expr: 'TV<sub>n</sub> = D<sub>n+1</sub> / (r − g)', note: 'Value the stable phase at year n, then discount TV back n periods.' },
+  { topic: 'equity', name: 'Preferred stock value', expr: 'V = D<sub>p</sub> / r', note: 'Fixed dividend perpetuity.' },
+  { topic: 'equity', name: 'Justified forward P/E', expr: 'P/E = (1 − b) / (r − g)', note: '(1−b) = payout ratio. Higher g or payout → higher P/E; higher r → lower.' },
+  { topic: 'equity', name: 'Sustainable growth', expr: 'g = b × ROE', note: 'Retention times profitability drives organic growth.' },
+  { topic: 'equity', name: 'Enterprise value', expr: 'EV = market cap + debt + preferred − cash', note: 'EV/EBITDA compares firms regardless of capital structure.' },
+
+  // ---------- Fixed Income ----------
+  { topic: 'fixedincome', name: 'Bond price', expr: 'P = Σ C/(1+r)<sup>t</sup> + F/(1+r)<sup>N</sup>', note: 'PV of coupons plus PV of face value at the market discount rate.' },
+  { topic: 'fixedincome', name: 'Full vs flat price', expr: 'Full = Flat + Accrued;&nbsp; AI = C × t/T', note: 'Trades settle at the full ("dirty") price; quotes are flat ("clean").' },
+  { topic: 'fixedincome', name: 'Forward rate from spots', expr: '(1+z₂)² = (1+z₁)(1+f<sub>1,1</sub>)', note: 'Implied 1-year rate, 1 year forward, from 1y and 2y spot rates.' },
+  { topic: 'fixedincome', name: 'Modified duration', expr: 'ModDur = MacDur / (1 + r)', note: 'r = yield per period. Approximate % price change for 1% Δ yield.' },
+  { topic: 'fixedincome', name: 'Approximate modified duration', expr: '(PV₋ − PV₊) / (2 × Δy × PV₀)', note: 'Numerical duration from repricing at ±Δy.' },
+  { topic: 'fixedincome', name: 'Price change with convexity', expr: '%ΔP ≈ −ModDur·Δy + ½·Conv·(Δy)²', note: 'Convexity term improves the estimate for large yield moves.' },
+  { topic: 'fixedincome', name: 'Money duration & PVBP', expr: 'MoneyDur = ModDur × Full price;&nbsp; PVBP = MoneyDur × 0.0001', note: 'Price value of a basis point = money change per 1 bp yield move.' },
+  { topic: 'fixedincome', name: 'Expected loss', expr: 'E(loss) = P(default) × (1 − recovery rate)', note: 'Loss severity = 1 − recovery rate.' },
+  { topic: 'fixedincome', name: 'Option-adjusted spread', expr: 'OAS = Z-spread − option cost', note: 'Callable: OAS < Z-spread; putable: OAS > Z-spread.' },
+  { topic: 'fixedincome', name: 'Floater coupon', expr: 'Coupon = reference rate + quoted margin', note: 'Resets each period; price returns near par at each reset date.' },
+
+  // ---------- Derivatives ----------
+  { topic: 'derivatives', name: 'Forward price (no income)', expr: 'F₀ = S₀ × (1 + r)<sup>T</sup>', note: 'With benefits/costs: F₀ = (S₀ − PV(benefits) + PV(costs)) × (1+r)^T.' },
+  { topic: 'derivatives', name: 'Value of long forward', expr: 'V<sub>t</sub> = S<sub>t</sub> − F₀ / (1+r)<sup>T−t</sup>', note: 'Zero at initiation; gains when spot rises above the discounted forward.' },
+  { topic: 'derivatives', name: 'Put–call parity', expr: 'c + X/(1+r)<sup>T</sup> = p + S₀', note: 'European options. Rearrange to build synthetic positions.' },
+  { topic: 'derivatives', name: 'Put–call–forward parity', expr: 'c + X/(1+r)<sup>T</sup> = p + F₀/(1+r)<sup>T</sup>', note: 'Replace spot with the discounted forward price.' },
+  { topic: 'derivatives', name: 'Risk-neutral probability', expr: 'π = (1 + r − d) / (u − d)', note: 'Binomial model. Option value = [πV_u + (1−π)V_d]/(1+r).' },
+  { topic: 'derivatives', name: 'Call payoff / profit', expr: 'Payoff = max(0, S<sub>T</sub> − X);&nbsp; Profit = payoff − premium', note: 'Put: max(0, X − S_T). Breakeven call: X + premium; put: X − premium.' },
+
+  // ---------- Alternatives ----------
+  { topic: 'alts', name: 'Hedge fund fees (2 & 20)', expr: 'Fees = 2% × AUM + 20% × gains above hurdle/HWM', note: 'High-water mark: incentive fee only on net new profits.' },
+  { topic: 'alts', name: 'Real estate value (income approach)', expr: 'V = NOI / cap rate', note: 'NOI = net operating income (before financing and income taxes).' },
+  { topic: 'alts', name: 'Commodity futures return', expr: 'Total ≈ price return + roll yield + collateral yield', note: 'Roll yield > 0 in backwardation, < 0 in contango.' },
+
+  // ---------- Portfolio Management ----------
+  { topic: 'portfolio', name: 'Two-asset portfolio risk', expr: 'σ<sub>p</sub>² = w₁²σ₁² + w₂²σ₂² + 2w₁w₂ρ₁₂σ₁σ₂', note: 'Diversification benefit appears whenever ρ < +1.' },
+  { topic: 'portfolio', name: 'CAPM / SML', expr: 'E(R<sub>i</sub>) = R<sub>f</sub> + β<sub>i</sub>(E(R<sub>m</sub>) − R<sub>f</sub>)', note: 'β = Cov(i,m)/σ²_m. Above the SML = undervalued.' },
+  { topic: 'portfolio', name: 'Capital market line', expr: 'E(R<sub>p</sub>) = R<sub>f</sub> + σ<sub>p</sub> × (E(R<sub>m</sub>)−R<sub>f</sub>)/σ<sub>m</sub>', note: 'Only efficient portfolios (mixes of Rf and the market) plot on the CML.' },
+  { topic: 'portfolio', name: 'Sharpe ratio', expr: 'Sharpe = (R<sub>p</sub> − R<sub>f</sub>) / σ<sub>p</sub>', note: 'Excess return per unit of total risk.' },
+  { topic: 'portfolio', name: 'Treynor measure', expr: 'Treynor = (R<sub>p</sub> − R<sub>f</sub>) / β<sub>p</sub>', note: 'Excess return per unit of systematic risk — for diversified portfolios.' },
+  { topic: 'portfolio', name: 'Jensen’s alpha', expr: 'α = R<sub>p</sub> − [R<sub>f</sub> + β(R<sub>m</sub> − R<sub>f</sub>)]', note: 'Return above what CAPM requires for the portfolio’s beta.' },
+  { topic: 'portfolio', name: 'M-squared', expr: 'M² = (R<sub>p</sub> − R<sub>f</sub>)(σ<sub>m</sub>/σ<sub>p</sub>) + R<sub>f</sub> − R<sub>m</sub>', note: 'Sharpe restated in % vs the market; same ranking as Sharpe.' },
+  { topic: 'portfolio', name: 'Beta', expr: 'β<sub>i</sub> = Cov(R<sub>i</sub>,R<sub>m</sub>) / σ<sub>m</sub>² = ρ<sub>im</sub>σ<sub>i</sub>/σ<sub>m</sub>', note: 'Sensitivity to market moves; market beta = 1.' },
+];

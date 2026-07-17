@@ -1,0 +1,322 @@
+/* Worked practice problems with step-by-step solutions. level: 1 = basic, 2 = intermediate, 3 = exam-level. */
+const EXERCISES = [
+  {
+    topic: 'quant', level: 1, title: 'Future value of a lump sum',
+    q: 'You invest $10,000 for 5 years at 8% per year, compounded annually. What will it grow to?',
+    steps: [
+      'Identify: PV = −10,000, N = 5, I/Y = 8, PMT = 0.',
+      'FV = PV × (1 + r)<sup>N</sup> = 10,000 × 1.08⁵.',
+      '1.08⁵ = 1.46933.',
+      'FV = 10,000 × 1.46933 = 14,693.28.',
+    ],
+    answer: 'FV ≈ $14,693.28',
+    calcTip: 'TVM tab: N=5, I/Y=8, PV=−10000, PMT=0 → solve FV.',
+  },
+  {
+    topic: 'quant', level: 2, title: 'Monthly savings (annuity FV)',
+    q: 'You deposit $500 at the end of each month for 10 years into an account earning 6% per year, compounded monthly. How much will you have?',
+    steps: [
+      'Periodic rate r = 6%/12 = 0.5%; N = 10 × 12 = 120 months.',
+      'FV = PMT × [(1+r)<sup>N</sup> − 1]/r = 500 × [(1.005)¹²⁰ − 1]/0.005.',
+      '(1.005)¹²⁰ = 1.81940, so the factor = 0.81940/0.005 = 163.879.',
+      'FV = 500 × 163.879 = 81,939.67.',
+    ],
+    answer: 'FV ≈ $81,939.67',
+    calcTip: 'TVM tab: N=120, I/Y=0.5, PV=0, PMT=−500 → solve FV.',
+  },
+  {
+    topic: 'quant', level: 2, title: 'Loan payment (amortization)',
+    q: 'A $300,000 mortgage is repaid over 30 years with equal monthly payments. The rate is 4.8% per year, compounded monthly. Find the monthly payment.',
+    steps: [
+      'r = 4.8%/12 = 0.4% per month; N = 360.',
+      'PMT = PV × r / [1 − (1+r)<sup>−N</sup>].',
+      '(1.004)<sup>−360</sup> = 0.23779, so denominator = 1 − 0.23779 = 0.76221.',
+      'PMT = 300,000 × 0.004 / 0.76221 = 1,200 / 0.76221 = 1,574.37.',
+    ],
+    answer: 'PMT ≈ $1,574.37 per month',
+    calcTip: 'TVM tab: N=360, I/Y=0.4, PV=300000, FV=0 → solve PMT (result negative = outflow).',
+  },
+  {
+    topic: 'quant', level: 3, title: 'Roy’s safety-first criterion',
+    q: 'Portfolio A: E(R)=12%, σ=16%. Portfolio B: E(R)=9%, σ=10%. The client cannot tolerate returns below 3%. Which portfolio is preferred under Roy’s safety-first rule?',
+    steps: [
+      'SF ratio = (E(R) − R<sub>L</sub>)/σ with R<sub>L</sub> = 3%.',
+      'A: (12 − 3)/16 = 0.5625.',
+      'B: (9 − 3)/10 = 0.60.',
+      'Higher SF ratio → smaller probability of falling below the threshold.',
+    ],
+    answer: 'Portfolio B (SF 0.60 > 0.5625)',
+  },
+  {
+    topic: 'quant', level: 2, title: 'Probability — Bayes update',
+    q: 'A fund has a 20% chance of being a "star". Stars beat the index with probability 0.8; non-stars with probability 0.4. The fund just beat the index. What is the probability it is a star?',
+    steps: [
+      'P(beat) = 0.8×0.2 + 0.4×0.8 = 0.16 + 0.32 = 0.48.',
+      'Bayes: P(star | beat) = P(beat | star)×P(star)/P(beat).',
+      '= (0.8 × 0.2)/0.48 = 0.16/0.48.',
+    ],
+    answer: 'P = 1/3 ≈ 33.3%',
+  },
+  {
+    topic: 'econ', level: 1, title: 'Elasticity and total revenue',
+    q: 'A firm raises price by 5% and quantity demanded falls by 8%. Is demand elastic, and what happens to total revenue?',
+    steps: [
+      'E = %ΔQ/%ΔP = −8/5 = −1.6, |E| = 1.6 > 1 → elastic.',
+      'With elastic demand, the quantity effect dominates the price effect.',
+      'So a price increase lowers total revenue.',
+    ],
+    answer: 'Demand is elastic; total revenue falls.',
+  },
+  {
+    topic: 'econ', level: 2, title: 'Cross rate calculation',
+    q: 'USD/EUR = 1.0850 (dollars per euro) and USD/GBP = 1.2700. Find the GBP/EUR cross rate.',
+    steps: [
+      'We want pounds per euro: GBP/EUR = (USD/EUR)/(USD/GBP).',
+      'The USD cancels: dollars-per-euro divided by dollars-per-pound = pounds per euro.',
+      '= 1.0850/1.2700 = 0.8543.',
+    ],
+    answer: 'GBP/EUR ≈ 0.8543',
+  },
+  {
+    topic: 'econ', level: 3, title: 'Forward exchange rate (covered parity)',
+    q: 'Spot CAD/USD = 1.3500. 1-year rates: CAD 4.0%, USD 5.5%. Find the 1-year forward CAD/USD.',
+    steps: [
+      'Price currency = CAD, base = USD.',
+      'F = S × (1 + i<sub>CAD</sub>)/(1 + i<sub>USD</sub>) = 1.3500 × 1.040/1.055.',
+      '= 1.3500 × 0.98578 = 1.3308.',
+      'USD (higher rate) trades at a forward discount, as expected.',
+    ],
+    answer: 'F ≈ 1.3308 CAD/USD',
+  },
+  {
+    topic: 'fsa', level: 2, title: 'LIFO to FIFO conversion',
+    q: 'A US firm reports LIFO inventory of $800k. The LIFO reserve is $150k (up $30k during the year). Find FIFO inventory and the effect on COGS.',
+    steps: [
+      'FIFO inventory = LIFO inventory + LIFO reserve = 800 + 150 = 950k.',
+      'COGS<sub>FIFO</sub> = COGS<sub>LIFO</sub> − ΔLIFO reserve = COGS − 30k.',
+      'Rising reserve means rising prices: FIFO shows lower COGS, higher gross profit.',
+    ],
+    answer: 'FIFO inventory = $950k; FIFO COGS is $30k lower than LIFO COGS.',
+  },
+  {
+    topic: 'fsa', level: 2, title: 'Cash conversion cycle',
+    q: 'DOH = 70 days, DSO = 40 days, days payables = 45 days. Compute the cash conversion cycle and interpret.',
+    steps: [
+      'CCC = DOH + DSO − days payables.',
+      '= 70 + 40 − 45 = 65 days.',
+      'The firm finances 65 days of operations from its own cash before collecting.',
+    ],
+    answer: 'CCC = 65 days',
+  },
+  {
+    topic: 'fsa', level: 3, title: 'DuPont decomposition',
+    q: 'Net margin 6%, asset turnover 1.4, assets/equity 2.0. Compute ROE. If leverage rises to 2.5 with other ratios constant, what is the new ROE?',
+    steps: [
+      'ROE = 0.06 × 1.4 × 2.0 = 0.168 = 16.8%.',
+      'New ROE = 0.06 × 1.4 × 2.5 = 0.21 = 21.0%.',
+      'Note: extra leverage raises ROE but also raises financial risk — quality of the increase matters.',
+    ],
+    answer: 'ROE = 16.8%; with higher leverage 21.0%.',
+  },
+  {
+    topic: 'corp', level: 2, title: 'NPV and IRR of a project',
+    q: 'A project costs $50,000 and returns $18,000 at the end of each year for 4 years. Cost of capital is 10%. Find NPV; should you accept?',
+    steps: [
+      'NPV = −50,000 + 18,000 × [1 − 1.10<sup>−4</sup>]/0.10.',
+      'Annuity factor = (1 − 0.68301)/0.10 = 3.16987.',
+      'PV of inflows = 18,000 × 3.16987 = 57,057.6.',
+      'NPV = 57,057.6 − 50,000 = 7,057.6 > 0 → accept.',
+    ],
+    answer: 'NPV ≈ +$7,058 → accept (IRR ≈ 16.4% > 10%)',
+    calcTip: 'NPV/IRR tab: CF0=−50000, CF1..CF4=18000, I=10 → NPV; then IRR.',
+  },
+  {
+    topic: 'corp', level: 2, title: 'WACC computation',
+    q: 'Target structure: 40% debt, 60% equity. Pre-tax cost of debt 6%, tax rate 25%, cost of equity 11%. Compute WACC.',
+    steps: [
+      'After-tax cost of debt = 6% × (1 − 0.25) = 4.5%.',
+      'WACC = 0.40 × 4.5% + 0.60 × 11%.',
+      '= 1.8% + 6.6% = 8.4%.',
+    ],
+    answer: 'WACC = 8.4%',
+  },
+  {
+    topic: 'corp', level: 3, title: 'Cost of forgoing a trade discount',
+    q: 'Terms "2/10 net 40". What is the annualized cost of paying on day 40 instead of day 10?',
+    steps: [
+      'You give up 2% to keep the money 30 extra days.',
+      'Cost = (1 + 0.02/0.98)<sup>365/30</sup> − 1.',
+      '= (1.020408)<sup>12.1667</sup> − 1 = 1.2786 − 1.',
+    ],
+    answer: '≈ 27.9% per year — take the discount if you can borrow cheaper.',
+  },
+  {
+    topic: 'equity', level: 2, title: 'Gordon growth valuation',
+    q: 'A stock just paid D₀ = $2.00. Dividends grow 4% forever; required return 9%. Value the stock. Is it attractive at a market price of $45?',
+    steps: [
+      'D₁ = 2.00 × 1.04 = 2.08.',
+      'V₀ = D₁/(r − g) = 2.08/(0.09 − 0.04).',
+      '= 2.08/0.05 = 41.60.',
+      'Market price 45 > 41.60 → overvalued by the model.',
+    ],
+    answer: 'V₀ = $41.60 → at $45 the stock looks overvalued.',
+  },
+  {
+    topic: 'equity', level: 3, title: 'Margin call price',
+    q: 'You buy a stock at $60 with 50% initial margin; maintenance margin is 30%. At what price do you get a margin call?',
+    steps: [
+      'P<sub>call</sub> = P₀ × (1 − IM)/(1 − MM).',
+      '= 60 × (1 − 0.50)/(1 − 0.30) = 60 × 0.50/0.70.',
+      '= 60 × 0.7143 = 42.86.',
+    ],
+    answer: 'Margin call below ≈ $42.86',
+  },
+  {
+    topic: 'equity', level: 2, title: 'Justified P/E',
+    q: 'Payout ratio 40%, required return 10%, expected growth 5%. Compute the justified forward P/E.',
+    steps: [
+      'P/E = payout/(r − g) = 0.40/(0.10 − 0.05).',
+      '= 0.40/0.05 = 8.',
+      'Check: g = b × ROE must be consistent with retention b = 0.6.',
+    ],
+    answer: 'Justified forward P/E = 8×',
+  },
+  {
+    topic: 'fixedincome', level: 2, title: 'Bond price',
+    q: 'A 3-year bond pays a 5% annual coupon (face $1,000). The market discount rate is 6%. Find the price.',
+    steps: [
+      'Coupons: 50 per year, plus 1,000 at maturity.',
+      'P = 50/1.06 + 50/1.06² + 1,050/1.06³.',
+      '= 47.17 + 44.50 + 881.60.',
+      '= 973.27 — a discount, because coupon 5% < yield 6%.',
+    ],
+    answer: 'P ≈ $973.27',
+    calcTip: 'TVM tab: N=3, I/Y=6, PMT=50, FV=1000 → solve PV (≈ −973.27).',
+  },
+  {
+    topic: 'fixedincome', level: 3, title: 'Duration + convexity price estimate',
+    q: 'A bond has modified duration 7.2 and convexity 65. Yields rise by 75 bps. Estimate the % price change.',
+    steps: [
+      'Δy = +0.0075.',
+      'Duration effect: −7.2 × 0.0075 = −0.054 = −5.40%.',
+      'Convexity effect: ½ × 65 × 0.0075² = 0.00183 = +0.18%.',
+      'Total ≈ −5.40% + 0.18% = −5.22%.',
+    ],
+    answer: '≈ −5.22%',
+  },
+  {
+    topic: 'fixedincome', level: 3, title: 'Implied forward rate',
+    q: '1-year spot rate is 4.0%; 2-year spot rate is 4.6%. Find the implied 1-year rate one year from now (1y1y).',
+    steps: [
+      '(1 + z₂)² = (1 + z₁)(1 + f).',
+      '(1.046)² = 1.094116; divide by 1.04 → 1.052035.',
+      'f = 5.20%.',
+      'Sanity check: forward > both spots because the curve is upward-sloping.',
+    ],
+    answer: '1y1y ≈ 5.20%',
+  },
+  {
+    topic: 'derivatives', level: 2, title: 'Forward price and arbitrage',
+    q: 'Spot price of a non-dividend stock is $80; 1-year risk-free rate is 5%. The 1-year forward trades at $86. Is there an arbitrage?',
+    steps: [
+      'Fair forward: F₀ = 80 × 1.05 = 84.',
+      'Market forward 86 > 84 → forward is rich.',
+      'Arbitrage: sell the forward, buy the stock with borrowed $80.',
+      'At expiry: deliver stock for 86, repay 84 → riskless profit 2.',
+    ],
+    answer: 'Yes — cash-and-carry earns $2 per share at expiry.',
+  },
+  {
+    topic: 'derivatives', level: 3, title: 'One-period binomial option value',
+    q: 'S₀ = 100, u = 1.25, d = 0.80, r = 4%. Value a 1-period European call with X = 100.',
+    steps: [
+      'π = (1 + r − d)/(u − d) = (1.04 − 0.80)/(1.25 − 0.80) = 0.24/0.45 = 0.5333.',
+      'Payoffs: V<sub>u</sub> = max(0, 125 − 100) = 25; V<sub>d</sub> = max(0, 80 − 100) = 0.',
+      'Value = [0.5333 × 25 + 0.4667 × 0]/1.04.',
+      '= 13.333/1.04 = 12.82.',
+    ],
+    answer: 'c ≈ $12.82',
+  },
+  {
+    topic: 'derivatives', level: 2, title: 'Put–call parity check',
+    q: 'S₀ = 50, X = 50, T = 1y, r = 6%, call price = 6.50. What should the European put cost?',
+    steps: [
+      'p = c + X/(1+r)<sup>T</sup> − S₀.',
+      'X/(1.06) = 47.17.',
+      'p = 6.50 + 47.17 − 50 = 3.67.',
+    ],
+    answer: 'p ≈ $3.67',
+  },
+  {
+    topic: 'alts', level: 2, title: 'Hedge fund fees with high-water mark',
+    q: 'A fund charges 2 & 20 (no hurdle, fees on year-end value, management fee on ending AUM). Start $100m, ends year at $120m gross. Compute total fees and investor return.',
+    steps: [
+      'Management fee = 2% × 120 = 2.4m.',
+      'Gains net of mgmt fee = 120 − 2.4 − 100 = 17.6m.',
+      'Incentive fee = 20% × 17.6 = 3.52m.',
+      'Investor value = 120 − 2.4 − 3.52 = 114.08m → return 14.08%.',
+    ],
+    answer: 'Fees = $5.92m; net investor return ≈ 14.1%',
+  },
+  {
+    topic: 'alts', level: 2, title: 'Real estate cap rate',
+    q: 'A property generates NOI of $450,000. Comparable properties trade at a 6% cap rate. Estimate the value.',
+    steps: [
+      'V = NOI / cap rate.',
+      '= 450,000 / 0.06.',
+      '= 7,500,000.',
+    ],
+    answer: 'V = $7.5 million',
+  },
+  {
+    topic: 'portfolio', level: 2, title: 'Two-asset portfolio risk',
+    q: '60% in A (σ=20%), 40% in B (σ=10%), correlation 0.3. Compute portfolio standard deviation.',
+    steps: [
+      'σ² = 0.6²×0.2² + 0.4²×0.1² + 2×0.6×0.4×0.3×0.2×0.1.',
+      '= 0.0144 + 0.0016 + 0.00288.',
+      '= 0.01888 → σ = √0.01888.',
+      '= 0.1374.',
+    ],
+    answer: 'σ ≈ 13.74% (less than the 16% weighted average — diversification)',
+  },
+  {
+    topic: 'portfolio', level: 2, title: 'CAPM required return & valuation',
+    q: 'Rf = 3%, market risk premium = 6%, β = 1.2. The analyst expects the stock to return 11%. Is it attractive?',
+    steps: [
+      'Required = 3% + 1.2 × 6% = 10.2%.',
+      'Expected 11% > required 10.2%.',
+      'The stock plots above the SML → undervalued.',
+    ],
+    answer: 'Undervalued — expected return exceeds the CAPM requirement by 0.8%.',
+  },
+  {
+    topic: 'portfolio', level: 3, title: 'Sharpe vs Treynor ranking',
+    q: 'Fund X: return 12%, σ 18%, β 0.9. Fund Y: return 14%, σ 25%, β 1.4. Rf = 4%. Rank by Sharpe and Treynor.',
+    steps: [
+      'Sharpe X = (12−4)/18 = 0.444; Sharpe Y = (14−4)/25 = 0.400 → X wins on total risk.',
+      'Treynor X = 8/0.9 = 8.89; Treynor Y = 10/1.4 = 7.14 → X wins on systematic risk too.',
+      'If rankings had conflicted: X carries more unsystematic risk relative to Y when Sharpe ranks it lower but Treynor higher.',
+    ],
+    answer: 'Fund X ranks higher on both measures.',
+  },
+  {
+    topic: 'ethics', level: 1, title: 'Material nonpublic information',
+    q: 'An analyst overhears two executives in an elevator discussing an unannounced merger, then buys the target’s stock for clients. Violation?',
+    steps: [
+      'The information is material (merger moves prices) and nonpublic (overheard, unannounced).',
+      'Standard II(A) prohibits acting or causing others to act on MNPI, regardless of how it was obtained.',
+      'Mosaic theory does not apply — this is a single piece of material nonpublic information, not a mosaic of nonmaterial facts.',
+    ],
+    answer: 'Yes — a violation of Standard II(A). The analyst must not trade or induce trading.',
+  },
+  {
+    topic: 'ethics', level: 2, title: 'Fair dealing with clients',
+    q: 'A manager issues a buy recommendation and immediately fills discretionary accounts of her largest clients first, then tells other clients a day later. Violation?',
+    steps: [
+      'Standard III(B) Fair Dealing requires treating all clients fairly when disseminating recommendations.',
+      'Systematically favoring large clients disadvantages the rest.',
+      'Fair ≠ identical: simultaneous notification isn’t always possible, but a deliberate two-tier rollout is a violation.',
+    ],
+    answer: 'Yes — violation of Standard III(B). Recommendations must be disseminated fairly to all clients.',
+  },
+];
