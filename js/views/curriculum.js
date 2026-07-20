@@ -57,28 +57,76 @@
     if (openTopicId) toggleTopic(openTopicId, true);
   };
 
-  // Placeholder module detail — Stage 3 replaces this with notes + LOS.
+  // Module detail: LOS + study notes + personal notes + completion.
+  const LOS_TAG = { new: 'New', changed: 'Changed', unchanged: '=' };
+
   function openModule(moduleId) {
     const app = document.getElementById('app');
     const m = window.CFA.curriculum.module(moduleId);
     if (!m) return;
     const store = window.CFA.store;
+    const content = window.CFA.content;
+    const los = content.los(moduleId);
+    const notes = content.notes(moduleId);
+    const userNote = store.notes()[moduleId] || '';
     const done = store.isModuleDone(moduleId);
+
+    const losHtml = los.length
+      ? `<ul class="los-list">${los.map((l) => `
+          <li class="los-item">
+            ${l.status && l.status !== 'unchanged' ? `<span class="tag ${l.status}">${LOS_TAG[l.status] || l.status}</span>` : ''}
+            <span>The candidate should be able to <span class="los-verb">${esc(l.text)}</span>.</span>
+          </li>`).join('')}</ul>`
+      : `<p class="view-sub">Learning outcomes for this module are being added.</p>`;
+
+    const notesHtml = notes
+      ? `<div class="note-body">${notes}</div>`
+      : `<div class="stub" style="padding:30px 10px"><span class="stub-icon">📝</span>
+           <p class="view-sub">Study notes for this module are coming soon. Higher-weight topics (Ethics, FSA, Equities, Fixed Income) are written first.</p></div>`;
+
     app.innerHTML = `
       <button class="btn-secondary" id="mod-back">← Back to curriculum</button>
       <div class="card" style="margin-top:14px">
-        <div class="view-sub" style="margin-bottom:4px">${esc(m.topicName)}</div>
-        <h1 class="view-title" style="margin-bottom:8px">${esc(m.name)}
+        <div class="mod-meta">${esc(m.topicName)} · ${esc(m.topicWeight || '')}</div>
+        <h1 class="view-title" style="margin-bottom:2px">${esc(m.name)}
           ${m.status !== 'unchanged' ? `<span class="tag ${m.status}" style="vertical-align:middle">${m.status}</span>` : ''}</h1>
-        <div class="stub" style="padding:36px 10px">
-          <span class="stub-icon">📝</span>
-          <p class="view-sub">Learning outcomes and study notes for this module are added in <strong>Stage 3</strong>.</p>
+
+        <div class="mod-section">
+          <h3>Learning outcomes</h3>
+          ${losHtml}
         </div>
-        <label style="display:flex;align-items:center;gap:8px;font-size:.92rem;cursor:pointer">
+
+        <div class="mod-section">
+          <h3>Study notes</h3>
+          ${notesHtml}
+        </div>
+
+        <div class="mod-section">
+          <h3>My notes <span class="note-saved hidden" id="note-saved">saved ✓</span></h3>
+          <textarea class="user-note" id="user-note" placeholder="Add your own notes for this module…">${esc(userNote)}</textarea>
+        </div>
+
+        <label class="mod-done-row">
           <input type="checkbox" id="mod-done" ${done ? 'checked' : ''}> Mark this module as completed
         </label>
       </div>`;
+
     document.getElementById('mod-back').addEventListener('click', () => window.CFA.render('curriculum', m.topicId));
     document.getElementById('mod-done').addEventListener('change', (e) => store.setModuleDone(moduleId, e.target.checked));
+
+    const ta = document.getElementById('user-note');
+    const savedMsg = document.getElementById('note-saved');
+    let t = null;
+    ta.addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        store.saveNote(moduleId, ta.value);
+        savedMsg.classList.remove('hidden');
+        setTimeout(() => savedMsg.classList.add('hidden'), 1200);
+      }, 400);
+    });
   }
+
+  // exposed so other views (e.g. Search) can jump straight into a module
+  window.CFA.openModule = openModule;
 })();

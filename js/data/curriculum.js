@@ -174,7 +174,7 @@ window.CFA.curriculum = {
   module(id) {
     for (const t of window.CURRICULUM.topics) {
       const m = t.modules.find((mm) => mm.id === id);
-      if (m) return { ...m, topicId: t.id, topicName: t.name };
+      if (m) return { ...m, topicId: t.id, topicName: t.name, topicWeight: t.weight };
     }
     return null;
   },
