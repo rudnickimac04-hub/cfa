@@ -264,7 +264,37 @@ a { color: var(--brand-2); }
 .grade.easy { background: var(--ok); }
 .grade:hover { filter: brightness(1.1); }
 
-/* ================= Calculator (floating, reused later) ================= */
+/* ================= Interactive calculators ================= */
+.calc-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.calc-tab { background: var(--surface); border: 1px solid var(--border); color: var(--ink); padding: 8px 14px; border-radius: 999px; font-size: .9rem; }
+.calc-tab:hover { border-color: var(--brand-2); }
+.calc-tab.active { background: var(--brand); color: #fff; border-color: var(--brand); }
+:root[data-theme="dark"] .calc-tab.active { background: var(--brand-2); color: #0f1420; }
+
+.calc-card { display: grid; grid-template-columns: 300px 1fr; gap: 20px; }
+@media (max-width: 780px) { .calc-card { grid-template-columns: 1fr; } }
+.calc-inputs { display: flex; flex-direction: column; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+.calc-inputs label { display: flex; flex-direction: column; gap: 5px; font-size: .86rem; font-weight: 600; color: var(--ink-soft); }
+.calc-inputs input[type="number"], .calc-inputs select { padding: 9px 11px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--ink); font-size: .95rem; font-weight: 400; }
+.calc-inputs input:disabled { background: var(--surface-2); color: var(--ink-soft); }
+.calc-inputs input[type="range"] { padding: 0; accent-color: var(--brand-2); }
+.calc-inputs label.chk { flex-direction: row; align-items: center; gap: 8px; font-weight: 400; }
+.calc-inputs .inline-num { margin-top: 6px; }
+.calc-mini-actions { display: flex; gap: 8px; }
+.calc-mini-actions .btn-secondary { padding: 7px 12px; font-size: .84rem; }
+
+.calc-out { min-width: 0; }
+.calc-result { background: var(--surface-2); border-radius: 10px; padding: 14px 16px; font-size: 1.05rem; margin-bottom: 14px; line-height: 1.5; }
+.calc-result.bad { color: var(--bad); }
+.calc-result .cr-label { color: var(--ink-soft); font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .3px; }
+.calc-result .cr-tag { color: var(--ink-soft); font-size: .85rem; }
+.calc-chart { color: var(--brand-2); background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 8px; overflow-x: auto; }
+.chart-plot .axis-l { stroke: var(--ink-soft); opacity: .5; }
+.chart-plot .axis-t { fill: var(--ink-soft); font-size: 10px; }
+.chart-plot .axis-lab { fill: var(--ink-soft); font-size: 11px; }
+.chart-plot .chart-guide, .chart-line .chart-guide { stroke: var(--ink-soft); opacity: .55; }
+.chart-plot .chart-marker { fill: var(--accent); stroke: var(--surface); stroke-width: 2; }
+
 .hidden { display: none !important; }
 
 @media (max-width: 640px) { .brand-badge { display: none; } .nav-btn { padding: 7px 9px; font-size: .86rem; } }
